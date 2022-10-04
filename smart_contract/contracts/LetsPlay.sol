@@ -8,12 +8,10 @@ contract LetsPlay is ERC20, Ownable {
 
     uint256 public maxPlayers;
 
-
     constructor() ERC20("","") Ownable()
     {
-        maxPlayers = 3;
+        maxPlayers = 2;
     }
-
 
 
 }
