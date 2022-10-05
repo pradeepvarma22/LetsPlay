@@ -6,6 +6,9 @@ import "./VRFv2Consumer.sol";
 contract LetsPlay is VRFv2Consumer {
 
     //
+    event CreateGame(address _whoCreated, uint256 _gameId);
+    event StakeGameFee(address _user, uint256 _gameId, bool _isLast);
+    event ClaimStake(address _winner, uint256 _gameId, uint256 _amount);
     uint256 public maxPlayers;
     uint256 public constant entryFee = 0.0000000001 ether;
     uint256 public gameCount;
@@ -30,7 +33,7 @@ contract LetsPlay is VRFv2Consumer {
     }
 
 
-    function createGame() external {
+    function createGame() external returns(uint256 _gameId) {
         gameCount += 1;
 
         address[] memory _dummyPlayers;
@@ -46,6 +49,8 @@ contract LetsPlay is VRFv2Consumer {
         });
 
         games.push(_game);
+        emit CreateGame(msg.sender, _gameId);
+        _gameId = gameCount;
     }
 
 
@@ -67,6 +72,7 @@ contract LetsPlay is VRFv2Consumer {
         } else {
             games[_gameId].players.push(msg.sender);
         }
+        emit StakeGameFee(msg.sender, _gameId,  isLast);
     }
 
     function claimStake(uint256 _gameId, uint256 _requestId) external
@@ -86,7 +92,9 @@ contract LetsPlay is VRFv2Consumer {
             games[_gameId].winnerAmount = entryFee * maxPlayers;
             games[_gameId].winner= temp_winnerAddress;
         }
+        emit ClaimStake(temp_winnerAddress, _gameId, entryFee * maxPlayers);
     }
+
 
     function winner(uint256 _gameId, uint256 _requestId) public view returns(address _winnerAddress,bool fulfillDone)
     {
