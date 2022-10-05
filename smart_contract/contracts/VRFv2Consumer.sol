@@ -23,7 +23,7 @@ contract VRFv2Consumer is VRFConsumerBaseV2, ConfirmedOwner {
     uint256[] public requestIds;
     uint256 public lastRequestId;
 
-    bytes32 keyHash = 0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
+    bytes32 keyHash = 0x4b09e658ed251bcafeebbc69400383d49f344ace09b9576fe248bb02c003fe9f;
 
     uint32 callbackGasLimit = 100000;
 
@@ -34,10 +34,10 @@ contract VRFv2Consumer is VRFConsumerBaseV2, ConfirmedOwner {
     uint32 numWords = 1;
 
     constructor(uint64 subscriptionId)
-        VRFConsumerBaseV2(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D)
+        VRFConsumerBaseV2(0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed)
         ConfirmedOwner(msg.sender)
     {
-        COORDINATOR = VRFCoordinatorV2Interface(0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D);
+        COORDINATOR = VRFCoordinatorV2Interface(0x7a1BaC17Ccc5b313516C5E16fb24f7659aA5ebed);
         s_subscriptionId = subscriptionId;
     }
 
@@ -61,7 +61,6 @@ contract VRFv2Consumer is VRFConsumerBaseV2, ConfirmedOwner {
         require(s_requests[_requestId].exists, 'request not found');
         s_requests[_requestId].fulfilled = true;
         s_requests[_requestId].randomWords = _randomWords;
-
         emit RequestFulfilled(_requestId, _randomWords);
     }
 

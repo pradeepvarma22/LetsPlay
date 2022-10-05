@@ -50,29 +50,30 @@ contract LetsPlay is VRFv2Consumer {
 
         games.push(_game);
         emit CreateGame(msg.sender, _gameId);
-        _gameId = gameCount;
+        _gameId = gameCount - 1;
     }
 
-
-    function stakeGameFee(uint256 _gameId) external payable returns(uint256 _requestId, bool isLast) {
+    function stakeGameFee(uint256 _gameId) external payable returns(bool isLast, uint256 _requestId) {
         require(games[_gameId].isEnded == false, "Game Ended Started");
         require(games[_gameId].isStarted == false, "Game is currently running");
         require(
             games[_gameId].presentPlayersCount < maxPlayers,
             "Max Players Exceeded"
         );
+        isLast = false;
         require(msg.value > entryFee, "Entry Fee is too low");
         games[_gameId].presentPlayersCount += 1;
 
         if (games[_gameId].presentPlayersCount == maxPlayers) {
             games[_gameId].isStarted = true;
             games[_gameId].winnerAmount = entryFee * maxPlayers;
-            _requestId =  requestRandomWords();
             isLast = true;
+            _requestId =  requestRandomWords();
         } else {
             games[_gameId].players.push(msg.sender);
         }
         emit StakeGameFee(msg.sender, _gameId,  isLast);
+        return (isLast,_requestId);
     }
 
     function claimStake(uint256 _gameId, uint256 _requestId) external

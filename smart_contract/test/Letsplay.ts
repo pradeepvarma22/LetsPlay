@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 const MAX_NO_OF_PLAYERS_PER_GAME: any = 2;
-
+const _subscriptionId: any = 2113 ;
 
 describe("LetsPlay -_-", function () {
 
@@ -13,7 +13,7 @@ describe("LetsPlay -_-", function () {
     const [owner, otherAccount] = await ethers.getSigners();
 
     const contractFactory = await ethers.getContractFactory("LetsPlay");
-    const contract = await contractFactory.deploy();
+    const contract = await contractFactory.deploy(_subscriptionId);
 
     return { contract, owner, otherAccount };
   }
